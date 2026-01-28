@@ -43,24 +43,25 @@ export function BankDistributionChart({ users }: BankDistributionChartProps) {
               layout="vertical"
               margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis type="number" stroke="var(--muted-foreground)" />
               <YAxis
                 dataKey="name"
                 type="category"
                 width={100}
-                stroke="hsl(var(--muted-foreground))"
+                stroke="var(--muted-foreground)"
                 tick={{ fontSize: 12 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--card)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
+                  color: "var(--foreground)",
                 }}
                 formatter={(value: number) => [`${value} cuentas`, "Cantidad"]}
               />
-              <Bar dataKey="count" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="count" fill="var(--chart-4)" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

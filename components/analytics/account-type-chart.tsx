@@ -24,7 +24,13 @@ const ACCOUNT_LABELS: Record<string, string> = {
   credito: "Cuenta Crédito",
 };
 
-const COLORS = ["#22c55e", "#3b82f6", "#f97316", "#8b5cf6", "#ec4899"];
+const COLORS = [
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+];
 
 export function AccountTypeChart({ users }: AccountTypeChartProps) {
   const data = useMemo(() => {
@@ -66,9 +72,10 @@ export function AccountTypeChart({ users }: AccountTypeChartProps) {
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--card)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
+                  color: "var(--foreground)",
                 }}
                 formatter={(value: number) => [`${value} cuentas`, "Cantidad"]}
               />

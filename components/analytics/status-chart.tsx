@@ -19,11 +19,11 @@ interface StatusChartProps {
 }
 
 const COLORS = {
-  activas: "#22c55e",
-  inactivas: "#6b7280",
-  devueltas: "#f97316",
-  investigadas: "#eab308",
-  suprimidas: "#ef4444",
+  activas: "var(--chart-1)",
+  inactivas: "var(--chart-2)",
+  devueltas: "var(--chart-3)",
+  investigadas: "var(--chart-4)",
+  suprimidas: "var(--chart-5)",
 };
 
 export function StatusChart({
@@ -71,9 +71,10 @@ export function StatusChart({
               </Pie>
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--card)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
+                  color: "var(--foreground)",
                 }}
                 formatter={(value: number) => [
                   `${value} cuentas (${((value / total) * 100).toFixed(1)}%)`,

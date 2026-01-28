@@ -91,25 +91,32 @@ export function ReferidosAnalysis({ users, cuentasConReferido }: ReferidosAnalys
         <div className="h-[180px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data} layout="vertical">
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis type="number" stroke="hsl(var(--muted-foreground))" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis type="number" stroke="var(--muted-foreground)" />
               <YAxis
                 dataKey="name"
                 type="category"
                 width={90}
-                stroke="hsl(var(--muted-foreground))"
+                stroke="var(--muted-foreground)"
                 tick={{ fontSize: 12 }}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "var(--card)",
+                  border: "1px solid var(--border)",
                   borderRadius: "8px",
+                  color: "var(--foreground)",
                 }}
               />
-              <Bar dataKey="activo" stackId="a" fill="#22c55e" name="Activo" />
-              <Bar dataKey="inactivo" stackId="a" fill="#6b7280" name="Inactivo" />
-              <Bar dataKey="otros" stackId="a" fill="#f97316" name="Otros" radius={[0, 4, 4, 0]} />
+              <Bar dataKey="activo" stackId="a" fill="var(--chart-1)" name="Activo" />
+              <Bar dataKey="inactivo" stackId="a" fill="var(--chart-3)" name="Inactivo" />
+              <Bar
+                dataKey="otros"
+                stackId="a"
+                fill="var(--chart-5)"
+                name="Otros"
+                radius={[0, 4, 4, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
