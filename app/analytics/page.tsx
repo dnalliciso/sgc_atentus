@@ -31,7 +31,12 @@ export default function AnalyticsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader user={{ email: user.email, name: user.name }} />
+      <DashboardHeader
+        user={{
+          email: user.email,
+          name: `${user.nombre} ${user.apellido}`,
+        }}
+      />
       <main className="container mx-auto px-4 py-8 max-w-7xl">
         <AnalyticsDashboard />
       </main>
