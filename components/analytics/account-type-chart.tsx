@@ -77,6 +77,12 @@ export function AccountTypeChart({ users }: AccountTypeChartProps) {
                   borderRadius: "8px",
                   color: "var(--foreground)",
                 }}
+                labelStyle={{
+                  color: "var(--foreground)",
+                }}
+                itemStyle={{
+                  color: "var(--foreground)",
+                }}
                 formatter={(value: number) => [`${value} cuentas`, "Cantidad"]}
               />
               <Legend

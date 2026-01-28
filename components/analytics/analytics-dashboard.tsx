@@ -18,31 +18,66 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDays } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CalendarDays, Filter } from "lucide-react";
 
 export function AnalyticsDashboard() {
   const [period, setPeriod] = useState<string>("all");
+  const [filterBanco, setFilterBanco] = useState<string>("all");
+  const [filterEstado, setFilterEstado] = useState<string>("all");
+  const [filterPais, setFilterPais] = useState<string>("all");
+
   const users = useMemo(() => getUsers(), []);
 
-  // Calcular métricas principales
-  const totalCuentas = users.length;
-  const cuentasActivas = users.filter((u) => u.status === "activo").length;
-  const cuentasInactivas = users.filter((u) => u.status === "inactivo").length;
-  const cuentasDevueltas = users.filter((u) => u.status === "devuelto").length;
-  const cuentasInvestigadas = users.filter((u) => u.status === "investigada").length;
-  const cuentasSuprimidas = users.filter((u) => u.status === "suprimida_arcos").length;
+  // Listas únicas para filtros
+  const bancos = useMemo(() => {
+    const uniqueBancos = [...new Set(users.map((u) => u.bankDetails.banco))].filter(Boolean);
+    return uniqueBancos.sort();
+  }, [users]);
+
+  const paises = useMemo(() => {
+    const uniquePaises = [...new Set(users.map((u) => u.pais))].filter(Boolean);
+    return uniquePaises.sort();
+  }, [users]);
+
+  const filteredUsers = useMemo(() => {
+    return users.filter((user) => {
+      const matchesBanco = filterBanco === "all" || user.bankDetails.banco === filterBanco;
+      const matchesEstado = filterEstado === "all" || user.status === filterEstado;
+      const matchesPais = filterPais === "all" || user.pais === filterPais;
+
+      return matchesBanco && matchesEstado && matchesPais;
+    });
+  }, [users, filterBanco, filterEstado, filterPais]);
+
+  const hasActiveFilters =
+    filterBanco !== "all" || filterEstado !== "all" || filterPais !== "all";
+
+  const clearFilters = () => {
+    setFilterBanco("all");
+    setFilterEstado("all");
+    setFilterPais("all");
+  };
+
+  // Calcular métricas principales sobre los usuarios filtrados
+  const totalCuentas = filteredUsers.length;
+  const cuentasActivas = filteredUsers.filter((u) => u.status === "activo").length;
+  const cuentasInactivas = filteredUsers.filter((u) => u.status === "inactivo").length;
+  const cuentasDevueltas = filteredUsers.filter((u) => u.status === "devuelto").length;
+  const cuentasInvestigadas = filteredUsers.filter((u) => u.status === "investigada").length;
+  const cuentasSuprimidas = filteredUsers.filter((u) => u.status === "suprimida_arcos").length;
   
-  const totalAbonos = users.reduce(
+  const totalAbonos = filteredUsers.reduce(
     (sum, u) => sum + u.abonos.reduce((s, a) => s + a.monto, 0),
     0
   );
   
-  const totalMantencion = users.reduce(
+  const totalMantencion = filteredUsers.reduce(
     (sum, u) => sum + u.bankDetails.costoMantencion,
     0
   );
 
-  const cuentasConReferido = users.filter((u) => u.referido !== null).length;
+  const cuentasConReferido = filteredUsers.filter((u) => u.referido !== null).length;
 
   return (
     <div className="space-y-6">
@@ -70,6 +105,67 @@ export function AnalyticsDashboard() {
         </div>
       </div>
 
+      {/* Filtros por banco, estado y país */}
+      <div className="flex flex-wrap items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/50">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Filter className="w-4 h-4" />
+          <span>Filtros:</span>
+        </div>
+
+        <Select value={filterBanco} onValueChange={setFilterBanco}>
+          <SelectTrigger className="w-[180px] h-9">
+            <SelectValue placeholder="Banco" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los bancos</SelectItem>
+            {bancos.map((banco) => (
+              <SelectItem key={banco} value={banco}>
+                {banco}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={filterEstado} onValueChange={setFilterEstado}>
+          <SelectTrigger className="w-[180px] h-9">
+            <SelectValue placeholder="Estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los estados</SelectItem>
+            <SelectItem value="activo">Activo</SelectItem>
+            <SelectItem value="inactivo">Inactivo</SelectItem>
+            <SelectItem value="devuelto">Devuelto</SelectItem>
+            <SelectItem value="investigada">Investigada</SelectItem>
+            <SelectItem value="suprimida_arcos">Suprimida ARCOS</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={filterPais} onValueChange={setFilterPais}>
+          <SelectTrigger className="w-[150px] h-9">
+            <SelectValue placeholder="País" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos los países</SelectItem>
+            {paises.map((pais) => (
+              <SelectItem key={pais} value={pais}>
+                {pais}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {hasActiveFilters && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={clearFilters}
+            className="h-9 text-muted-foreground hover:text-foreground"
+          >
+            Limpiar filtros
+          </Button>
+        )}
+      </div>
+
       {/* KPIs principales */}
       <KpiCards
         totalCuentas={totalCuentas}
@@ -90,22 +186,22 @@ export function AnalyticsDashboard() {
           investigadas={cuentasInvestigadas}
           suprimidas={cuentasSuprimidas}
         />
-        <BankDistributionChart users={users} />
+        <BankDistributionChart users={filteredUsers} />
       </div>
 
       {/* Timeline de abonos */}
-      <AbonosTimelineChart users={users} />
+      <AbonosTimelineChart users={filteredUsers} />
 
       {/* Análisis por país y tipo de cuenta */}
       <div className="grid gap-6 md:grid-cols-2">
-        <CountryDistribution users={users} />
-        <AccountTypeChart users={users} />
+        <CountryDistribution users={filteredUsers} />
+        <AccountTypeChart users={filteredUsers} />
       </div>
 
       {/* Análisis de referidos */}
       <div className="grid gap-6 md:grid-cols-2">
-        <ReferidosAnalysis users={users} cuentasConReferido={cuentasConReferido} />
-        <TopReferidosTable users={users} />
+        <ReferidosAnalysis users={filteredUsers} cuentasConReferido={cuentasConReferido} />
+        <TopReferidosTable users={filteredUsers} />
       </div>
 
       {/* Resumen de estados críticos */}

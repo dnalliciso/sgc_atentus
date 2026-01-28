@@ -76,6 +76,12 @@ export function StatusChart({
                   borderRadius: "8px",
                   color: "var(--foreground)",
                 }}
+                labelStyle={{
+                  color: "var(--foreground)",
+                }}
+                itemStyle={{
+                  color: "var(--foreground)",
+                }}
                 formatter={(value: number) => [
                   `${value} cuentas (${((value / total) * 100).toFixed(1)}%)`,
                   "Cantidad",
