@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import useSWR, { mutate } from "swr";
-import { getUsers, deleteUser, type UserAccount } from "@/lib/users-store";
+import type { UserAccount } from "@/lib/users-store";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -66,8 +66,10 @@ function anonymize(text: string, show: boolean): string {
   return "••••••••";
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
 export function UsersTable() {
-  const { data: users = [] } = useSWR("users", getUsers);
+  const { data: users = [] } = useSWR<UserAccount[]>("/api/users", fetcher);
   const { validateSecurityCode } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -123,8 +125,8 @@ export function UsersTable() {
 
   const handleDelete = async () => {
     if (deleteUserData) {
-      deleteUser(deleteUserData.id);
-      mutate("users");
+      await fetch(`/api/users/${deleteUserData.id}`, { method: "DELETE" });
+      mutate("/api/users");
       setDeleteUserData(null);
     }
   };

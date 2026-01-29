@@ -12,8 +12,8 @@ export interface AppUser {
   createdAt: string;
 }
 
-// Datos iniciales - usuario por defecto
-const initialAppUsers: AppUser[] = [
+// Datos iniciales - usuario por defecto (también se usarán para inicializar SQLite)
+export const initialAppUsers: AppUser[] = [
   {
     id: "user-1",
     nombre: "Daniel",

@@ -4,7 +4,7 @@ import React from "react";
 
 import { useState, useEffect } from "react";
 import { mutate } from "swr";
-import { addUser, updateUser, type UserAccount } from "@/lib/users-store";
+import type { UserAccount } from "@/lib/users-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -71,7 +71,7 @@ export function UserDialog({
     }
   }, [user, mode, open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const referido =
@@ -84,29 +84,46 @@ export function UserDialog({
         : null;
 
     if (mode === "create") {
-      addUser({
-        name,
-        email,
-        role: "titular",
-        status,
-        telefono,
-        pais,
-        fechaIngreso,
-        referido,
+      await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          role: "titular",
+          status,
+          telefono,
+          pais,
+          fechaIngreso,
+          referido,
+          bankDetails: {
+            banco: "",
+            tipoCuenta: "corriente",
+            rut: "",
+            claveWeb: "",
+            numeroCuenta: "",
+            costoMantencion: 0,
+          },
+          abonos: [],
+        }),
       });
     } else if (user) {
-      updateUser(user.id, {
-        name,
-        email,
-        status,
-        telefono,
-        pais,
-        fechaIngreso,
-        referido,
+      await fetch(`/api/users/${user.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          status,
+          telefono,
+          pais,
+          fechaIngreso,
+          referido,
+        }),
       });
     }
 
-    mutate("users");
+    mutate("/api/users");
     onOpenChange(false);
   };
 

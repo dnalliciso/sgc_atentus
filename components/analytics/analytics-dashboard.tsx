@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { getUsers } from "@/lib/users-store";
+import useSWR from "swr";
+import type { UserAccount } from "@/lib/users-store";
 import { KpiCards } from "./kpi-cards";
 import { StatusChart } from "./status-chart";
 import { BankDistributionChart } from "./bank-distribution-chart";
@@ -21,13 +22,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CalendarDays, Filter } from "lucide-react";
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
 export function AnalyticsDashboard() {
   const [period, setPeriod] = useState<string>("all");
   const [filterBanco, setFilterBanco] = useState<string>("all");
   const [filterEstado, setFilterEstado] = useState<string>("all");
   const [filterPais, setFilterPais] = useState<string>("all");
 
-  const users = useMemo(() => getUsers(), []);
+  const { data: users = [] } = useSWR<UserAccount[]>("/api/users", fetcher);
 
   // Listas únicas para filtros
   const bancos = useMemo(() => {

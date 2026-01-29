@@ -4,7 +4,7 @@ import React from "react"
 
 import { useEffect, useState } from "react";
 import { mutate } from "swr";
-import { addAppUser, updateAppUser, type AppUser } from "@/lib/app-users-store";
+import type { AppUser } from "@/lib/app-users-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -110,11 +110,19 @@ export function AppUserDialog({
 
     try {
       if (mode === "create") {
-        addAppUser(formData);
+        await fetch("/api/app-users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
       } else if (user) {
-        updateAppUser(user.id, formData);
+        await fetch(`/api/app-users/${user.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
       }
-      mutate("app-users");
+      mutate("/api/app-users");
       onOpenChange(false);
     } finally {
       setIsLoading(false);

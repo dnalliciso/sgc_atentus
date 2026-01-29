@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import { getAppUsers, type AppUser } from "@/lib/app-users-store";
+import type { AppUser } from "@/lib/app-users-store";
 
 export type UserRole = "admin" | "user";
 
@@ -68,8 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true;
     }
 
-    // Verificar usuarios de la aplicación
-    const appUsers = getAppUsers();
+    // Verificar usuarios de la aplicación (desde API/SQLite)
+    const res = await fetch("/api/app-users");
+    const appUsers: AppUser[] = await res.json();
     const appUser = appUsers.find(
       (u) => u.email === email && u.password === password && u.activo
     );

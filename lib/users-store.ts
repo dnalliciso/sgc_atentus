@@ -35,8 +35,8 @@ export interface UserAccount {
   abonos: Abono[];
 }
 
-// Datos iniciales de ejemplo
-const initialUsers: UserAccount[] = [
+// Datos iniciales de ejemplo (también se usarán para inicializar SQLite)
+export const initialUsers: UserAccount[] = [
   {
     id: "1",
     name: "Daniel Nalli",

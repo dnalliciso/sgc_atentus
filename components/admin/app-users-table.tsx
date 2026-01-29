@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import useSWR, { mutate } from "swr";
-import {
-  getAppUsers,
-  deleteAppUser,
-  toggleAppUserStatus,
-  type AppUser,
-} from "@/lib/app-users-store";
+import type { AppUser } from "@/lib/app-users-store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -42,8 +37,10 @@ import {
 import { AppUserDialog } from "./app-user-dialog";
 import { DeleteAppUserDialog } from "./delete-app-user-dialog";
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json())
+
 export function AppUsersTable() {
-  const { data: users = [] } = useSWR("app-users", getAppUsers);
+  const { data: users = [] } = useSWR<AppUser[]>("/api/app-users", fetcher);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editUser, setEditUser] = useState<AppUser | null>(null);
@@ -58,15 +55,17 @@ export function AppUsersTable() {
 
   const handleDelete = async () => {
     if (deleteUserData) {
-      deleteAppUser(deleteUserData.id);
-      mutate("app-users");
+      await fetch(`/api/app-users/${deleteUserData.id}`, { method: "DELETE" });
+      mutate("/api/app-users");
       setDeleteUserData(null);
     }
   };
 
-  const handleToggleStatus = (user: AppUser) => {
-    toggleAppUserStatus(user.id);
-    mutate("app-users");
+  const handleToggleStatus = async (user: AppUser) => {
+    await fetch(`/api/app-users/${user.id}`, {
+      method: "POST",
+    });
+    mutate("/api/app-users");
   };
 
   const totalUsers = users.length;
