@@ -30,9 +30,18 @@ db.exec(`
     fechaIngreso TEXT NOT NULL,
     telefono TEXT NOT NULL,
     pais TEXT NOT NULL,
+    rutTitular TEXT,
     referidoJson TEXT,
     bankDetailsJson TEXT NOT NULL,
-    abonosJson TEXT NOT NULL
+    abonosJson TEXT NOT NULL,
+    referidoRut TEXT
+  );
+
+  CREATE TABLE IF NOT EXISTS referidos (
+    rut TEXT PRIMARY KEY,
+    nombre TEXT NOT NULL,
+    email TEXT NOT NULL,
+    telefono TEXT NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS app_users (
@@ -47,3 +56,12 @@ db.exec(`
     createdAt TEXT NOT NULL
   );
 `)
+
+// Pequeñas migraciones para bases ya creadas (añadir columnas si no existen)
+try {
+  db.exec("ALTER TABLE users ADD COLUMN rutTitular TEXT");
+} catch {}
+
+try {
+  db.exec("ALTER TABLE users ADD COLUMN referidoRut TEXT");
+} catch {}

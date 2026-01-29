@@ -43,6 +43,8 @@ export function UserDialog({
   const [pais, setPais] = useState("Chile");
   const [fechaIngreso, setFechaIngreso] = useState("");
   const [status, setStatus] = useState<UserAccount["status"]>("activo");
+  const [rutTitular, setRutTitular] = useState("");
+  const [referidoRut, setReferidoRut] = useState("");
   const [referidoNombre, setReferidoNombre] = useState("");
   const [referidoEmail, setReferidoEmail] = useState("");
   const [referidoTelefono, setReferidoTelefono] = useState("");
@@ -55,6 +57,8 @@ export function UserDialog({
       setPais(user.pais);
       setFechaIngreso(user.fechaIngreso);
       setStatus(user.status);
+      setRutTitular(user.rutTitular || "");
+      setReferidoRut(user.referido?.rut || "");
       setReferidoNombre(user.referido?.nombre || "");
       setReferidoEmail(user.referido?.email || "");
       setReferidoTelefono(user.referido?.telefono || "");
@@ -65,6 +69,8 @@ export function UserDialog({
       setPais("Chile");
       setFechaIngreso(new Date().toISOString().split("T")[0]);
       setStatus("activo");
+      setRutTitular("");
+      setReferidoRut("");
       setReferidoNombre("");
       setReferidoEmail("");
       setReferidoTelefono("");
@@ -75,8 +81,9 @@ export function UserDialog({
     e.preventDefault();
 
     const referido =
-      referidoNombre || referidoEmail || referidoTelefono
+      referidoNombre || referidoEmail || referidoTelefono || referidoRut
         ? {
+            rut: referidoRut,
             nombre: referidoNombre,
             email: referidoEmail,
             telefono: referidoTelefono,
@@ -95,6 +102,7 @@ export function UserDialog({
           telefono,
           pais,
           fechaIngreso,
+          rutTitular,
           referido,
           bankDetails: {
             banco: "",
@@ -118,6 +126,7 @@ export function UserDialog({
           telefono,
           pais,
           fechaIngreso,
+          rutTitular,
           referido,
         }),
       });
@@ -177,6 +186,18 @@ export function UserDialog({
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="rutTitular">RUT titular</Label>
+              <Input
+                id="rutTitular"
+                value={rutTitular}
+                onChange={(e) => setRutTitular(e.target.value)}
+                placeholder="12.345.678-9"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mt-2">
+            <div className="space-y-2">
               <Label htmlFor="pais">País</Label>
               <Select value={pais} onValueChange={setPais}>
                 <SelectTrigger id="pais">
@@ -229,6 +250,11 @@ export function UserDialog({
           <div className="pt-4 border-t border-border">
             <Label className="text-sm font-medium">Contacto Referido (opcional)</Label>
             <div className="mt-3 space-y-3">
+              <Input
+                value={referidoRut}
+                onChange={(e) => setReferidoRut(e.target.value)}
+                placeholder="RUT del referido"
+              />
               <Input
                 value={referidoNombre}
                 onChange={(e) => setReferidoNombre(e.target.value)}

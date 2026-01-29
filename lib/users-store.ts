@@ -15,6 +15,7 @@ export interface BankDetails {
 }
 
 export interface Referido {
+  rut: string;
   nombre: string;
   email: string;
   telefono: string;
@@ -30,6 +31,9 @@ export interface UserAccount {
   fechaIngreso: string;
   telefono: string;
   pais: string;
+  // RUT del titular de la cuenta
+  rutTitular: string;
+  // Datos del contacto referido (incluye su RUT)
   referido: Referido | null;
   bankDetails: BankDetails;
   abonos: Abono[];
@@ -47,7 +51,9 @@ export const initialUsers: UserAccount[] = [
     fechaIngreso: "2024-01-15",
     telefono: "+56 9 1234 5678",
     pais: "Chile",
+    rutTitular: "12.345.678-9",
     referido: {
+      rut: "9.876.543-2",
       nombre: "Roberto Sánchez",
       email: "rsanchez@empresa.com",
       telefono: "+56 9 8765 4321",
@@ -77,7 +83,9 @@ export const initialUsers: UserAccount[] = [
     fechaIngreso: "2024-02-20",
     telefono: "+56 9 2345 6789",
     pais: "Chile",
+    rutTitular: "15.678.901-2",
     referido: {
+      rut: "7.654.321-0",
       nombre: "Laura Mendoza",
       email: "lmendoza@empresa.com",
       telefono: "+56 9 7654 3210",
@@ -106,6 +114,7 @@ export const initialUsers: UserAccount[] = [
     fechaIngreso: "2024-03-10",
     telefono: "+56 9 3456 7890",
     pais: "Chile",
+    rutTitular: "18.234.567-K",
     referido: null,
     bankDetails: {
       banco: "BCI",
@@ -130,7 +139,9 @@ export const initialUsers: UserAccount[] = [
     fechaIngreso: "2024-06-01",
     telefono: "+56 9 4567 8901",
     pais: "Argentina",
+    rutTitular: "19.876.543-2",
     referido: {
+      rut: "8.765.432-1",
       nombre: "Pablo Torres",
       email: "ptorres@empresa.com",
       telefono: "+54 9 1122 3344",
@@ -155,7 +166,9 @@ export const initialUsers: UserAccount[] = [
     fechaIngreso: "2024-07-15",
     telefono: "+56 9 5678 9012",
     pais: "Chile",
+    rutTitular: "16.543.210-5",
     referido: {
+      rut: "6.543.210-9",
       nombre: "Carmen Vega",
       email: "cvega@empresa.com",
       telefono: "+56 9 6543 2109",
@@ -186,6 +199,7 @@ export const initialUsers: UserAccount[] = [
     fechaIngreso: "2024-08-20",
     telefono: "+56 9 6789 0123",
     pais: "Perú",
+    rutTitular: "20.123.456-7",
     referido: null,
     bankDetails: {
       banco: "Banco Falabella",

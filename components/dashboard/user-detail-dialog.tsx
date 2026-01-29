@@ -135,7 +135,7 @@ export function UserDetailDialog({
                 <div className="space-y-1">
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5">
                     <User className="h-3 w-3" />
-                    RUT
+                    RUT Cuenta
                   </p>
                   <p className={`font-medium font-mono ${hideSensitiveData ? "text-muted-foreground" : "text-foreground"}`}>
                     {maskData(bankDetails.rut, hideSensitiveData) || "No especificado"}
@@ -180,6 +180,16 @@ export function UserDetailDialog({
                     Nombre Titular
                   </p>
                   <p className="font-medium text-foreground">{user.name}</p>
+                </div>
+
+                <div className="space-y-1">
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <User className="h-3 w-3" />
+                    RUT Titular
+                  </p>
+                  <p className={`font-medium font-mono ${hideSensitiveData ? "text-muted-foreground" : "text-foreground"}`}>
+                    {maskData(user.rutTitular, hideSensitiveData) || "No especificado"}
+                  </p>
                 </div>
               </div>
             </CardContent>
